@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid>
+            <DataGrid Margin="0,130,0,0"/>
+            <ComboBox HorizontalAlignment="Center" Margin="0,63,0,0" VerticalAlignment="Top" Width="120"/>
+            <Label Content="Filtrado" HorizontalAlignment="Left" Margin="253,59,0,0" VerticalAlignment="Top"/>
+        </Grid>
+
     </Grid>
 </Window>
