@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,17 +13,27 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ScottPlot;
 
 namespace InterfazGraficaReto2
 {
-    /// <summary>
-    /// Lógica de interacción para MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            
+            double[] xs = { 1, 2, 3, 4, 5 };
+            double[] ys = { 1, 4, 9, 16, 25 };
+
+            PlotControl.Plot.Add.Scatter(xs, ys);
+            PlotControl.Refresh();
+        }
+
+        private void VerInformes(object sender, RoutedEventArgs e)
+        {
+            Informes ventanaInformes = new Informes();
+            ventanaInformes.ShowDialog();
         }
     }
 }

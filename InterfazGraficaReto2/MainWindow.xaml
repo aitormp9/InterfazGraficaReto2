@@ -4,14 +4,47 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InterfazGraficaReto2"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        mc:Ignorable="d" 
+        xmlns:scottplot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+        Title="GameHub" Height="450" Width="800" Background="LightGray">
     <Grid>
-        <Grid>
-            <DataGrid Margin="0,130,0,0"/>
-            <ComboBox HorizontalAlignment="Center" Margin="0,63,0,0" VerticalAlignment="Top" Width="120"/>
-            <Label Content="Filtrado" HorizontalAlignment="Left" Margin="253,59,0,0" VerticalAlignment="Top"/>
-        </Grid>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="153*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="2">
+            <scottplot:WpfPlot x:Name="PlotControl" Margin="580,113,-5,0"/>
+            <DataGrid Margin="0,113,225,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Nombre jugador" Width="*"/>
+                    <DataGridTextColumn Header="Fecha" Width="*"/>
+                    <DataGridTextColumn Header="Duración" Width="*"/>
+                    <DataGridTextColumn Header="Score" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Label Content="Ordenar por:" HorizontalAlignment="Left" Margin="38,19,0,0" VerticalAlignment="Top"/>
+            <ComboBox HorizontalAlignment="Left" Margin="116,21,0,0" VerticalAlignment="Top" Width="120">
+                <ComboBoxItem Content="Nombre"/>
+                <ComboBoxItem Content="Fecha" />
+                <ComboBoxItem Content="Duración"/>
+                <ComboBoxItem Content="Puntuación"/>
+            </ComboBox>
+
+            <Label Content="Filtrado por fecha:" HorizontalAlignment="Left" Margin="249,19,0,0" VerticalAlignment="Top"/>
+            <DatePicker HorizontalAlignment="Left" Margin="360,20,0,0" VerticalAlignment="Top"/>
+
+            <Label Content="Mostrar: " HorizontalAlignment="Left" Margin="48,61,0,0" VerticalAlignment="Top"/>
+            <CheckBox Content="Nombre jugador" IsChecked="True" HorizontalAlignment="Left" Margin="126,67,0,0" VerticalAlignment="Top"/>
+            <CheckBox Content="Fecha" IsChecked="True" HorizontalAlignment="Left" Margin="251,67,0,0" VerticalAlignment="Top"/>
+            <CheckBox Content="Duración" IsChecked="True" HorizontalAlignment="Left" Margin="318,67,0,0" VerticalAlignment="Top"/>
+            <CheckBox Content="Puntuación" IsChecked="True" HorizontalAlignment="Left" Margin="400,67,0,0" VerticalAlignment="Top"/>
+
+            <Button Content="Ver informes" HorizontalAlignment="Left" Margin="613,57,0,0" VerticalAlignment="Top" Background="White" Height="20" Width="77" Click="VerInformes"/>
+            <Button Content="Ayuda" HorizontalAlignment="Left" Margin="705,57,0,0" VerticalAlignment="Top" Background="White" Width="54"/>
+            
+            <Label Content="Gráfico por..." HorizontalAlignment="Left" Margin="652,82,0,0" VerticalAlignment="Top"/>
+        </Grid>
     </Grid>
 </Window>
