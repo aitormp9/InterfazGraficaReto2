@@ -20,7 +20,7 @@
                     <DataGridTextColumn Header="Nombre jugador" Width="*"/>
                     <DataGridTextColumn Header="Fecha" Width="*"/>
                     <DataGridTextColumn Header="Duración" Width="*"/>
-                    <DataGridTextColumn Header="Score" Width="*"/>
+                    <DataGridTextColumn Header="Puntuación" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
 
