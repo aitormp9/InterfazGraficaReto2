@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 
 namespace InterfazGraficaReto2
 {
+    
     /// <summary>
     /// Lógica de interacción para Informes.xaml
     /// </summary>
@@ -29,5 +30,6 @@ namespace InterfazGraficaReto2
             Exportar ventanaExportar = new Exportar();
             ventanaExportar.ShowDialog();
         }
+
     }
 }

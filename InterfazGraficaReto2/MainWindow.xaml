@@ -14,37 +14,40 @@
             <ColumnDefinition Width="153*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.ColumnSpan="2">
-            <scottplot:WpfPlot x:Name="PlotControl" Margin="580,113,-5,0"/>
-            <DataGrid Margin="0,113,225,0">
+            <scottplot:WpfPlot x:Name="Grafico" Margin="580,113,-5,0"/>
+            <DataGrid Margin="0,95,225,0" IsReadOnly="True" AutoGenerateColumns="False" 
+                       x:Name="Tabla">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Nombre jugador" Width="*"/>
-                    <DataGridTextColumn Header="Fecha" Width="*"/>
-                    <DataGridTextColumn Header="Duración" Width="*"/>
-                    <DataGridTextColumn Header="Puntuación" Width="*"/>
+                    <DataGridTextColumn Header="Nombre jugador" Width="*" Binding="{Binding NombreJugador}"/>
+                    <DataGridTextColumn Header="Fecha" Width="*" Binding="{Binding Fecha, StringFormat={}{0:dd/MM/yyyy}}"/>
+                    <DataGridTextColumn Header="Duración" Width="*" Binding="{Binding Duracion}"/>
+                    <DataGridTextColumn Header="Puntuación" Width="*" Binding="{Binding Puntuacion}"/>
+                    
+                    <DataGridTextColumn Header="Id" Width="*" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="Nombre" Width="*" Binding="{Binding Nombre}"/>
+                    <DataGridTextColumn Header="Email" Width="*" Binding="{Binding Email}"/>
+
+                    <DataGridTextColumn Header="Puesto" Width="*" Binding="{Binding Puesto}"/>
+                    <DataGridTextColumn Header="Nombre" Width="*" Binding="{Binding NombreJugador}"/>
+                    <DataGridTextColumn Header="Puntuacion" Width="*" Binding="{Binding Puntuacion}"/>
                 </DataGrid.Columns>
+                
             </DataGrid>
 
-            <Label Content="Ordenar por:" HorizontalAlignment="Left" Margin="38,19,0,0" VerticalAlignment="Top"/>
-            <ComboBox HorizontalAlignment="Left" Margin="116,21,0,0" VerticalAlignment="Top" Width="120">
-                <ComboBoxItem Content="Nombre"/>
-                <ComboBoxItem Content="Fecha" />
-                <ComboBoxItem Content="Duración"/>
-                <ComboBoxItem Content="Puntuación"/>
+            <Label Content="Tabla: " HorizontalAlignment="Left" Margin="62,49,0,0" VerticalAlignment="Top"/>
+            <ComboBox x:Name="TablasCB" HorizontalAlignment="Left" Margin="110,49,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="TablasCB_SelectionChanged">
+                <ComboBoxItem Content="Jugadores"/>
+                <ComboBoxItem Content="Partidas" />
+                <ComboBoxItem Content="Ranking"/>
             </ComboBox>
 
-            <Label Content="Filtrado por fecha:" HorizontalAlignment="Left" Margin="249,19,0,0" VerticalAlignment="Top"/>
-            <DatePicker HorizontalAlignment="Left" Margin="360,20,0,0" VerticalAlignment="Top"/>
-
-            <Label Content="Mostrar: " HorizontalAlignment="Left" Margin="48,61,0,0" VerticalAlignment="Top"/>
-            <CheckBox Content="Nombre jugador" IsChecked="True" HorizontalAlignment="Left" Margin="126,67,0,0" VerticalAlignment="Top"/>
-            <CheckBox Content="Fecha" IsChecked="True" HorizontalAlignment="Left" Margin="251,67,0,0" VerticalAlignment="Top"/>
-            <CheckBox Content="Duración" IsChecked="True" HorizontalAlignment="Left" Margin="318,67,0,0" VerticalAlignment="Top"/>
-            <CheckBox Content="Puntuación" IsChecked="True" HorizontalAlignment="Left" Margin="400,67,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="LabelFecha"  Content="Filtrado por fecha:" HorizontalAlignment="Left" Margin="249,47,0,0" VerticalAlignment="Top"/>
+            <DatePicker x:Name="FechaDP"  HorizontalAlignment="Left" Margin="360,47,0,0" VerticalAlignment="Top" SelectedDateChanged="FiltradoFecha"/>
 
             <Button Content="Ver informes" HorizontalAlignment="Left" Margin="613,57,0,0" VerticalAlignment="Top" Background="White" Height="20" Width="77" Click="VerInformes"/>
             <Button Content="Ayuda" HorizontalAlignment="Left" Margin="705,57,0,0" VerticalAlignment="Top" Background="White" Width="54"/>
             
-            <Label Content="Gráfico por..." HorizontalAlignment="Left" Margin="652,82,0,0" VerticalAlignment="Top"/>
+            <Label Content="Gráfico por Puntuaciones" HorizontalAlignment="Left" Margin="621,82,0,0" VerticalAlignment="Top"/>
         </Grid>
     </Grid>
 </Window>
