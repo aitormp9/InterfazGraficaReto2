@@ -20,9 +20,9 @@ namespace InterfazGraficaReto2
     /// <summary>
     /// Lógica de interacción para Api.xaml
     /// </summary>
-    public partial class Api : Page
+    public partial class Api : Page     
     {
-        private string url = "http://localhost:8080/api/v1/";
+        private string url = "http://localhost:8080/api/v1/";       // llamada a la api mediante url
         private readonly HttpClient _httpclient;
 
         public Api()
@@ -31,7 +31,7 @@ namespace InterfazGraficaReto2
             _httpclient = new HttpClient();
             _httpclient.BaseAddress = new Uri(url);
         }
-        public async Task<string> apiGet(string endpoint)
+        public async Task<string> apiGet(string endpoint)   // función para recibir la información de la api
         {
             HttpResponseMessage resultado = await this._httpclient.GetAsync(endpoint);
             string respuesta = await resultado.Content.ReadAsStringAsync();

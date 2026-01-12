@@ -19,10 +19,11 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ScottPlot;
+using ScottPlot.TickGenerators;
 
 namespace InterfazGraficaReto2
 {
-    public class Jugador
+    public class Jugador // creación de la clase Jugador
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
@@ -31,7 +32,7 @@ namespace InterfazGraficaReto2
         public Jugador() { }
     }
 
-    public class Partida
+    public class Partida // creación de la clase Partida
     {
         public string NombreJugador { get; set; }
         public DateTime Fecha { get; set; }
@@ -39,7 +40,7 @@ namespace InterfazGraficaReto2
         public int Puntuacion { get; set; }
         public Partida() { }
     }
-    public class Ranking
+    public class Ranking    // creación de la clase Ranking
     {
         public int Puesto { get; set; }
         public string NombreJugador { get; set; }
@@ -48,52 +49,69 @@ namespace InterfazGraficaReto2
         public Ranking() { }
     }
     public partial class MainWindow : Window
-    {
+    {                                           // creaciones de los ObservableCollection de cada clase
         public ObservableCollection<Jugador> JugadorOC { get; set; }
-        public ObservableCollection<Partida> PartidaOC { get; set; } = new ObservableCollection<Partida>();
+        public ObservableCollection<Partida> PartidaOC { get; set; }
         public ObservableCollection<Ranking> RankingOC { get; set; }
 
         public MainWindow()
-        {
+        {                   // llamadas a los ObservableCollection
             JugadorOC = new ObservableCollection<Jugador>();
+            PartidaOC = new ObservableCollection<Partida>();
             RankingOC = new ObservableCollection<Ranking>();
-            this.DataContext = this;
 
             InitializeComponent();
-            TablasCB.SelectedIndex = 0;
+            // al iniciar el proyecto se abre la tabla de Partidas
+            TablasCB.SelectedIndex = 1; 
             ComboBoxItem tablaSeleccionada = (ComboBoxItem)TablasCB.SelectedItem;
             String resultadoCB = tablaSeleccionada.Content.ToString();
             ElegirTabla(resultadoCB);
+            // llamadas a las funciones de Api y Grafico para que se ejecuten al iniciar la aplicación
             LlamadaApi();
             DibujarGrafico();
         }
 
         private void DibujarGrafico()
         {
-            double[] puntuaciones = PartidaOC.Select(p => (double)p.Puntuacion).ToArray();
+            double[] duracion = PartidaOC.Select(d => (double)d.Duracion).ToArray();
 
-            if (puntuaciones.Length == 0)
+
+            if (duracion.Length == 0)
             {
                 Grafico.Plot.Clear();
                 Grafico.Refresh();
                 return;
             }
-            var hist = ScottPlot.Statistics.Histogram.WithBinCount(20, puntuaciones);
-            Grafico.Plot.Clear();
-            Grafico.Plot.Add.Histogram(hist).BarWidthFraction = 0.8;
-
+            var hist = ScottPlot.Statistics.Histogram.WithBinCount(10, duracion);
+            double binSize = hist.FirstBinSize;
+            double halfBin = binSize / 2;
+            double[] yPuntuacion = new double[hist.Bins.Length];
+            for(int i= 0; i < hist.Bins.Length; i++)
+            {
+                double min = hist.Bins[i] - halfBin;
+                double max = hist.Bins[i] + halfBin;
+                var puntuaciones = PartidaOC.Where(d => d.Duracion >= min && d.Duracion <= max).Select(p=>p.Puntuacion);
+                yPuntuacion[i] = puntuaciones.Any() ? puntuaciones.Average() : 0; 
+            }
+            var barras = Grafico.Plot.Add.Bars(hist.Bins, yPuntuacion);
+            foreach(var bar in barras.Bars)
+            {
+                bar.Size = hist.FirstBinSize * 0.8;
+            }
+            Grafico.Plot.XLabel("duracion");
+            Grafico.Plot.YLabel("puntuacion");
+            Grafico.Plot.Axes.Margins(bottom: 0);
+            
             Grafico.Refresh();
         }
 
-
-
-        private void VerInformes(object sender, RoutedEventArgs e)
+        private void VerInformes(object sender, RoutedEventArgs e)  // al hacer click en el botón de ver informes, se redirige a la ventana Informes
         {
             Informes ventanaInformes = new Informes();
             ventanaInformes.ShowDialog();
         }
 
-        private void TablasCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void TablasCB_SelectionChanged(object sender, SelectionChangedEventArgs e)  // función para el correcto funcionamiento del ComboBox
         {
 
             ComboBoxItem tablaSeleccionada = (ComboBoxItem)TablasCB.SelectedItem;
@@ -103,16 +121,16 @@ namespace InterfazGraficaReto2
             ElegirTabla(resultadoCB);
         }
 
-        private void ElegirTabla(String resultadoCB)
+        private void ElegirTabla(String resultadoCB)        // función para enseñar la tabla en función de lo elegido en el ComboBox
         {
-            foreach (var col in Tabla.Columns)
+            foreach (var col in Tabla.Columns)      //  escondiendo todas las columnas de las tablas
             {
-                col.Visibility = Visibility.Collapsed;
+                col.Visibility = Visibility.Collapsed;  
 
             }
             FechaDP.Visibility = Visibility.Hidden;
             LabelFecha.Visibility = Visibility.Hidden;
-            switch (resultadoCB)
+            switch (resultadoCB)                                        // dependiendo de la tabla elegida, se muestran unas columnas u otras
             {
                 case "Jugadores":
 
@@ -145,7 +163,7 @@ namespace InterfazGraficaReto2
                     break;
             }
         }
-        private async void FiltradoFecha(object sender, SelectionChangedEventArgs e)
+        private async void FiltradoFecha(object sender, SelectionChangedEventArgs e)    // función para filtrar la fecha seleccionada
         {
             List<Partida> partidaEliminar = new List<Partida>();
 
@@ -155,16 +173,16 @@ namespace InterfazGraficaReto2
 
             await LlamadaApi();
 
-            if (fechaSeleccionada.HasValue)
+            if (fechaSeleccionada.HasValue)         
             {
                 
-                foreach (var partida in PartidaOC)
+                foreach (var partida in PartidaOC)      // si la fecha seleccionada coincide con las fechas de las partidas, se muestran
                 {
-                    if (fechaSeleccionada.Value.Date != partida.Fecha.Date) {
+                    if (fechaSeleccionada.Value.Date != partida.Fecha.Date) {   
                         partidaEliminar.Add(partida);
                     }
                 }
-                foreach(var partida in partidaEliminar)
+                foreach(var partida in partidaEliminar)                
                 {
                     PartidaOC.Remove(partida);
                     Tabla.Items.Refresh();
@@ -173,25 +191,25 @@ namespace InterfazGraficaReto2
             
         }
 
-        private async Task LlamadaApi()
+        private async Task LlamadaApi()     // función para hacer las llamadas a las apis
         {
-            PartidaOC.Clear();
+            PartidaOC.Clear();          // limpieza de las tablas 
             JugadorOC.Clear();
             RankingOC.Clear();
             try
             {
-                var api = new Api();
-                var respuestaPartidas = await api.apiGet("partidas");
+                var api = new Api();        // llamadas a las apis mediante su nombre
+                var respuestaPartidas = await api.apiGet("partidas");       
                 var respuestaJugadores = await api.apiGet("jugadores");
                 var respuestaRanking = await api.apiGet("ranking");
 
-                var listaPartidas = JsonConvert.DeserializeObject<JArray>(respuestaPartidas);
+                var listaPartidas = JsonConvert.DeserializeObject<JArray>(respuestaPartidas); // pasamos las respuestas de las apis a formato json
                 var listaJugadores = JsonConvert.DeserializeObject<JArray>(respuestaJugadores);
                 var listaRanking = JsonConvert.DeserializeObject<JArray>(respuestaRanking);
 
-                foreach (var item in listaPartidas)
+                foreach (var item in listaPartidas)     // paso de variables de las apis a la lista
                 {
-                    string NombreJugador = item["nombre"].ToString();
+                    string NombreJugador = item["nombre"].ToString();   
                     string Fecha = item["fecha"].ToString();
                     string Duracion = item["duracion"].ToString();
                     string Puntuacion = item["score"].ToString();
@@ -223,9 +241,10 @@ namespace InterfazGraficaReto2
 
                     RankingOC.Add(new Ranking { Puesto = Puesto, NombreJugador = NombreJugador, Puntuacion = Puntuacion });
                 }
+                DibujarGrafico();
 
             }
-            catch (Exception e)
+            catch (Exception e) // control de excepciones
             {
                 MessageBox.Show("Excepcion: " + e.Message);
             }
