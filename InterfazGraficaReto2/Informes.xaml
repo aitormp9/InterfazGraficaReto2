@@ -5,13 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InterfazGraficaReto2"
         mc:Ignorable="d"
-        Title="Informes" Height="450" Width="800">
-    <Grid>
-        <Button Content="Exportar" HorizontalAlignment="Left" Margin="653,91,0,0" VerticalAlignment="Top" Click="ExportarInforme"/>
-        <Label Content="Elegir informe" HorizontalAlignment="Left" Margin="156,111,0,0" VerticalAlignment="Top"/>
-        <ComboBox HorizontalAlignment="Left" Margin="280,113,0,0" VerticalAlignment="Top" Width="120">
-            <ComboBoxItem Content="Ranking de jugadores"/>
+        Title="Informes" Height="252" Width="673">
+    <Grid Margin="0,0,0,-6" Background="LightGray">
+        <Button Content="Exportar" HorizontalAlignment="Left" Margin="418,0,0,0" VerticalAlignment="Center" RenderTransformOrigin="-2.813,0.89" Background="White"/>
+        <Label Content="Elegir informe:" HorizontalAlignment="Left" Margin="139,93,0,0" VerticalAlignment="Top"/>
+        <ComboBox HorizontalAlignment="Left" Margin="243,95,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="Historial de partidas"/>
+            <ComboBoxItem Content="Ranking de jugadores"/>
+            <ComboBoxItem Content="Lista de jugadores"/>
+        </ComboBox>
+        <Label Content="Exportar en" HorizontalAlignment="Left" Margin="139,125,0,0" VerticalAlignment="Top"/>
+        <ComboBox HorizontalAlignment="Left" Margin="243,125,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBoxItem Content="PDF" />
+            <ComboBoxItem Content="Excel" />
+            <ComboBoxItem Content="CSV" />
         </ComboBox>
 
     </Grid>

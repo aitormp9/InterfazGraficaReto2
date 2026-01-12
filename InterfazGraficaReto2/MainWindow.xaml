@@ -45,7 +45,8 @@
             <DatePicker x:Name="FechaDP"  HorizontalAlignment="Left" Margin="360,47,0,0" VerticalAlignment="Top" SelectedDateChanged="FiltradoFecha"/>
 
             <Button Content="Ver informes" HorizontalAlignment="Left" Margin="613,57,0,0" VerticalAlignment="Top" Background="White" Height="20" Width="77" Click="VerInformes"/>
-            <Button Content="Ayuda" HorizontalAlignment="Left" Margin="705,57,0,0" VerticalAlignment="Top" Background="White" Width="54"/>
+            <Button Content="Ayuda" HorizontalAlignment="Left" Margin="705,57,0,0" VerticalAlignment="Top" Background="White" Width="54" Click="AyudaPDF"/>
+            
             
             <Label Content="Gráfico por Puntuaciones" HorizontalAlignment="Left" Margin="621,82,0,0" VerticalAlignment="Top"/>
         </Grid>

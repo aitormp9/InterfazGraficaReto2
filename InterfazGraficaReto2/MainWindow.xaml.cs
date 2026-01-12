@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Emit;
@@ -16,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ScottPlot;
@@ -59,6 +61,7 @@ namespace InterfazGraficaReto2
             JugadorOC = new ObservableCollection<Jugador>();
             PartidaOC = new ObservableCollection<Partida>();
             RankingOC = new ObservableCollection<Ranking>();
+            
 
             InitializeComponent();
             // al iniciar el proyecto se abre la tabla de Partidas
@@ -247,6 +250,21 @@ namespace InterfazGraficaReto2
             catch (Exception e) // control de excepciones
             {
                 MessageBox.Show("Excepcion: " + e.Message);
+            }
+        }
+
+        private void AyudaPDF(object sender, RoutedEventArgs e)
+        {
+            string ruta = @"..\..\Documentación de usuario para GAME HUB.pdf";
+            try
+            {
+                Process.Start(new ProcessStartInfo(ruta)
+                {
+                    UseShellExecute = true
+                });
+            }catch(Exception err)
+            {
+                MessageBox.Show("Excepción" + err.Message);
             }
         }
     }  

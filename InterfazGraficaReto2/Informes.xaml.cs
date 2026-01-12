@@ -24,12 +24,5 @@ namespace InterfazGraficaReto2
         {
             InitializeComponent();
         }
-
-        private void ExportarInforme(object sender, RoutedEventArgs e)
-        {
-            Exportar ventanaExportar = new Exportar();
-            ventanaExportar.ShowDialog();
-        }
-
     }
 }
