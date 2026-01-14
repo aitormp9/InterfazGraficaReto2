@@ -19,12 +19,11 @@ using OpenTK.Graphics.ES20;
 namespace InterfazGraficaReto2
 {
     public partial class BaseDatos : Page
-    {
+    {                                           // conexión a la BD mediante IP, puerto, nombre DB, usuario y contraseña
         public string conexion = "Host = 3.233.57.10;" + "Port = 5432;" + "Database = game_db;" + "Username = dam;" + "Password = password;";
         public BaseDatos()
         {
             InitializeComponent();
-            
         }
         
         public string conexionBD()

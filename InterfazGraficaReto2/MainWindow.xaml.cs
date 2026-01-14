@@ -58,7 +58,7 @@ namespace InterfazGraficaReto2
         public ObservableCollection<Partida> PartidaOC { get; set; }
         public ObservableCollection<Ranking> RankingOC { get; set; }
         
-        public string conn = "";
+        public string conn = "";        // inicialización del fichero BD
         public BaseDatos bd;
        
         public MainWindow()
@@ -66,6 +66,7 @@ namespace InterfazGraficaReto2
             JugadorOC = new ObservableCollection<Jugador>();
             PartidaOC = new ObservableCollection<Partida>();
             RankingOC = new ObservableCollection<Ranking>();
+
             bd = new BaseDatos();
 
 
@@ -75,27 +76,27 @@ namespace InterfazGraficaReto2
             ComboBoxItem tablaSeleccionada = (ComboBoxItem)TablasCB.SelectedItem;
             String resultadoCB = tablaSeleccionada.Content.ToString();
             ElegirTabla(resultadoCB);
+
             // llamadas a las funciones de la BD y Grafico para que se ejecuten al iniciar la aplicación
             LlamadaJugadores();
             LlamadaPartidas();
             LlamadaRanking();
-            
             DibujarGrafico();
         }
-        public void LlamadaJugadores()
+        public void LlamadaJugadores()      // función para la muestra de datos de la tabla Jugadores
         {
             JugadorOC.Clear();
             using (NpgsqlConnection con = new NpgsqlConnection(bd.conexionBD()))
             {
                 con.Open();
-                string query = "select * from jugadores";
+                string query = "select * from jugadores";       // consulta a ejecutar
                 var llamada = new NpgsqlCommand(query, con);
 
                 using (var reader = llamada.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        JugadorOC.Add(new Jugador
+                        JugadorOC.Add(new Jugador       // introducción de datos al Observable Collection de Jugador
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("id")),
                             Nombre = reader.GetString(reader.GetOrdinal("nombre")),
@@ -105,13 +106,13 @@ namespace InterfazGraficaReto2
                 }
             }
         }
-        public async Task LlamadaPartidas()
+        public async Task LlamadaPartidas()         // función para la muestra de datos de la tabla Partidas
         {
             PartidaOC.Clear();
-            using (var con = new NpgsqlConnection(bd.conexionBD()))
+            using (var con = new NpgsqlConnection(bd.conexionBD())) // conexión con la base de datos
             {
                 con.Open();
-                string query = "select * from jugadores as j inner join jugadores_partidas as jp on j.id = jp.jugador_id " +
+                string query = "select * from jugadores as j inner join jugadores_partidas as jp on j.id = jp.jugador_id " +    // consulta a ejecutar
                     "inner join partidas as p on jp.partida_id = p.id;";
                 var llamada = new NpgsqlCommand(query, con);
 
@@ -119,25 +120,24 @@ namespace InterfazGraficaReto2
                 {
                     while (reader.Read())
                     {
-                        PartidaOC.Add(new Partida
+                        PartidaOC.Add(new Partida       // introducción de datos al Observable Collection de Partida
                         {
                             NombreJugador = reader.GetString(reader.GetOrdinal("nombre")),
                             Fecha = reader.GetDateTime(reader.GetOrdinal("fecha")),
                             Duracion = reader.GetInt32(reader.GetOrdinal("duracion")),
                             Puntuacion = reader.GetInt32(reader.GetOrdinal("score"))
                         });
-
                     }
                 }
             }
         }
-        public void LlamadaRanking()
+        public void LlamadaRanking()        // función para la muestra de datos de la tabla Ranking
         {
             RankingOC.Clear();
             using (var con = new NpgsqlConnection(bd.conexionBD()))
             {
                 con.Open();
-                string query = "select j.id, j.nombre, sum(jp.score) as total_score from jugadores_partidas as jp " +
+                string query = "select j.id, j.nombre, sum(jp.score) as total_score from jugadores_partidas as jp " +   // consulta a ejecutar
                     "inner join jugadores as j on j.id = jp.jugador_id group by j.id, j.nombre order by total_score desc;";
                 var llamada = new NpgsqlCommand(query, con);
                 int puesto = 0;
@@ -147,7 +147,7 @@ namespace InterfazGraficaReto2
                     while (reader.Read())
                     {
                         puesto += 1;
-                        RankingOC.Add(new Ranking
+                        RankingOC.Add(new Ranking       // introducción de datos al Observable Collection de Ranking
                         {
                             Puesto = puesto,
                             NombreJugador = reader.GetString(reader.GetOrdinal("nombre")),
@@ -161,7 +161,6 @@ namespace InterfazGraficaReto2
         private void DibujarGrafico()
         {
             double[] duracion = PartidaOC.Select(d => (double)d.Duracion).ToArray();
-
 
             if (duracion.Length == 0)
             {
@@ -200,7 +199,6 @@ namespace InterfazGraficaReto2
 
         private void TablasCB_SelectionChanged(object sender, SelectionChangedEventArgs e)  // función para el correcto funcionamiento del ComboBox
         {
-
             ComboBoxItem tablaSeleccionada = (ComboBoxItem)TablasCB.SelectedItem;
 
             String resultadoCB = tablaSeleccionada.Content.ToString();
@@ -213,7 +211,6 @@ namespace InterfazGraficaReto2
             foreach (var col in Tabla.Columns)      //  escondiendo todas las columnas de las tablas
             {
                 col.Visibility = Visibility.Collapsed;  
-
             }
             FechaDP.Visibility = Visibility.Hidden;
             LabelFecha.Visibility = Visibility.Hidden;
@@ -254,7 +251,6 @@ namespace InterfazGraficaReto2
         {
             List<Partida> partidaEliminar = new List<Partida>();
 
-
             DateTime? fechaSeleccionada = FechaDP.SelectedDate;
 
             if (!fechaSeleccionada.HasValue) return;
@@ -263,14 +259,13 @@ namespace InterfazGraficaReto2
 
             if (fechaSeleccionada.HasValue)         
             {
-                
                 foreach (var partida in PartidaOC)      // si la fecha seleccionada coincide con las fechas de las partidas, se muestran
                 {
                     if (fechaSeleccionada.Value.Date != partida.Fecha.Date) {   
                         partidaEliminar.Add(partida);
                     }
                 }
-                foreach(var partida in partidaEliminar)                
+                foreach(var partida in partidaEliminar)        // se eliminan de la tabla las partidas que no sean de la fecha seleccionada        
                 {
                     PartidaOC.Remove(partida);
                     Tabla.Items.Refresh();
@@ -278,7 +273,7 @@ namespace InterfazGraficaReto2
             }
             
         }
-        private void AyudaPDF(object sender, RoutedEventArgs e)
+        private void AyudaPDF(object sender, RoutedEventArgs e)     // al hacer click en el botón de Ayuda, se abre la documentación para el usuario en el navegador
         {
             string ruta = @"..\..\Documentación de usuario para GAME HUB.pdf";
             try
@@ -287,7 +282,8 @@ namespace InterfazGraficaReto2
                 {
                     UseShellExecute = true
                 });
-            }catch(Exception err)
+
+            }catch(Exception err)   // control de excepciones
             {
                 MessageBox.Show("Excepción" + err.Message);
             }
