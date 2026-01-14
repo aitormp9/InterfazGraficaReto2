@@ -14,7 +14,7 @@
             <ComboBoxItem Content="Ranking de jugadores"/>
             <ComboBoxItem Content="Lista de jugadores"/>
         </ComboBox>
-        <Label Content="Exportar en" HorizontalAlignment="Left" Margin="139,125,0,0" VerticalAlignment="Top"/>
+        <Label Content="Exportar en:" HorizontalAlignment="Left" Margin="139,125,0,0" VerticalAlignment="Top"/>
         <ComboBox HorizontalAlignment="Left" Margin="243,125,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="PDF" />
             <ComboBoxItem Content="Excel" />

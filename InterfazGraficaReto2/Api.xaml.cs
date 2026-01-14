@@ -22,7 +22,8 @@ namespace InterfazGraficaReto2
     /// </summary>
     public partial class Api : Page     
     {
-        private string url = "http://localhost:8080/api/v1/";       // llamada a la api mediante url
+        //private string url = "http://localhost:8080/api/v1/";       // llamada a la api mediante url
+        private string url = "http://3.233.57.10:8080/api/v1/";
         private readonly HttpClient _httpclient;
 
         public Api()

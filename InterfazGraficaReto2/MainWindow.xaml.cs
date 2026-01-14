@@ -70,7 +70,9 @@ namespace InterfazGraficaReto2
             String resultadoCB = tablaSeleccionada.Content.ToString();
             ElegirTabla(resultadoCB);
             // llamadas a las funciones de Api y Grafico para que se ejecuten al iniciar la aplicación
-            LlamadaApi();
+            //LlamadaApi();
+            BaseDatos bd = new BaseDatos();
+            bd.llamadaJugadores();
             DibujarGrafico();
         }
 
