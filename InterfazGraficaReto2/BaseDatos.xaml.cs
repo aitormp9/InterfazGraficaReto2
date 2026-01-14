@@ -12,52 +12,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Reporting.Map.WebForms.BingMaps;
 using Npgsql;
+using OpenTK.Graphics.ES20;
 
 namespace InterfazGraficaReto2
 {
     public partial class BaseDatos : Page
     {
+        public string conexion = "Host = 3.233.57.10;" + "Port = 5432;" + "Database = game_db;" + "Username = dam;" + "Password = password;";
         public BaseDatos()
         {
             InitializeComponent();
+            
         }
-
-        //public string conexionBD = "Host = 3.233.57.10;" + "Port = 5432;" + "Database = game_db;" + "Username = dam;" + "Password = password;";
-
-
-        public void llamadaJugadores()
+        
+        public string conexionBD()
         {
-            string conexionBD = "Host = 3.233.57.10;" + "Port = 5432;" + "Database = game_db;" + "Username = dam;" + "Password = password;";
-            using (var con = new NpgsqlConnection(conexionBD))
-            {
-                con.Open();
-                string query = "select * from jugadores";
-                var llamada = new NpgsqlCommand(query, con);
-                MessageBox.Show(llamada.ToString());
-            }
-        }
-        private void llamadaPartidas()
-        {
-            string conexionBD = "Host = 3.233.57.10;" + "Port = 5432;" + "Database = game_db;" + "Username = dam;" + "Password = password;";
-            using (var con = new NpgsqlConnection(conexionBD))
-            {
-                con.Open();
-                string query = "select * from partidas";
-                var llamada = new NpgsqlCommand(query, con);
-                MessageBox.Show(llamada.ToString());
-            }
-        }
-        private void llamadaRanking()
-        {
-            string conexionBD = "Host = 3.233.57.10;" + "Port = 5432;" + "Database = game_db;" + "Username = dam;" + "Password = password;";
-            using (var con = new NpgsqlConnection(conexionBD))
-            {
-                con.Open();
-                string query = "select * from ranking";
-                var llamada = new NpgsqlCommand(query, con);
-                MessageBox.Show(llamada.ToString());
-            }
+            string con = conexion;
+            return con;
         }
     }
 }

@@ -20,7 +20,9 @@ using System.Windows.Shapes;
 using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Npgsql;
 using ScottPlot;
+using ScottPlot.Colormaps;
 using ScottPlot.TickGenerators;
 
 namespace InterfazGraficaReto2
@@ -55,13 +57,17 @@ namespace InterfazGraficaReto2
         public ObservableCollection<Jugador> JugadorOC { get; set; }
         public ObservableCollection<Partida> PartidaOC { get; set; }
         public ObservableCollection<Ranking> RankingOC { get; set; }
-
+        
+        public string conn = "";
+        public BaseDatos bd;
+       
         public MainWindow()
         {                   // llamadas a los ObservableCollection
             JugadorOC = new ObservableCollection<Jugador>();
             PartidaOC = new ObservableCollection<Partida>();
             RankingOC = new ObservableCollection<Ranking>();
-            
+            bd = new BaseDatos();
+
 
             InitializeComponent();
             // al iniciar el proyecto se abre la tabla de Partidas
@@ -69,11 +75,87 @@ namespace InterfazGraficaReto2
             ComboBoxItem tablaSeleccionada = (ComboBoxItem)TablasCB.SelectedItem;
             String resultadoCB = tablaSeleccionada.Content.ToString();
             ElegirTabla(resultadoCB);
-            // llamadas a las funciones de Api y Grafico para que se ejecuten al iniciar la aplicación
-            //LlamadaApi();
-            BaseDatos bd = new BaseDatos();
-            bd.llamadaJugadores();
+            // llamadas a las funciones de la BD y Grafico para que se ejecuten al iniciar la aplicación
+            LlamadaJugadores();
+            LlamadaPartidas();
+            LlamadaRanking();
+            
             DibujarGrafico();
+        }
+        public void LlamadaJugadores()
+        {
+            JugadorOC.Clear();
+            using (NpgsqlConnection con = new NpgsqlConnection(bd.conexionBD()))
+            {
+                con.Open();
+                string query = "select * from jugadores";
+                var llamada = new NpgsqlCommand(query, con);
+
+                using (var reader = llamada.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        JugadorOC.Add(new Jugador
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("id")),
+                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                            Email = reader.GetString(reader.GetOrdinal("email"))
+                        });
+                    }
+                }
+            }
+        }
+        public async Task LlamadaPartidas()
+        {
+            PartidaOC.Clear();
+            using (var con = new NpgsqlConnection(bd.conexionBD()))
+            {
+                con.Open();
+                string query = "select * from jugadores as j inner join jugadores_partidas as jp on j.id = jp.jugador_id " +
+                    "inner join partidas as p on jp.partida_id = p.id;";
+                var llamada = new NpgsqlCommand(query, con);
+
+                using (var reader = llamada.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        PartidaOC.Add(new Partida
+                        {
+                            NombreJugador = reader.GetString(reader.GetOrdinal("nombre")),
+                            Fecha = reader.GetDateTime(reader.GetOrdinal("fecha")),
+                            Duracion = reader.GetInt32(reader.GetOrdinal("duracion")),
+                            Puntuacion = reader.GetInt32(reader.GetOrdinal("score"))
+                        });
+
+                    }
+                }
+            }
+        }
+        public void LlamadaRanking()
+        {
+            RankingOC.Clear();
+            using (var con = new NpgsqlConnection(bd.conexionBD()))
+            {
+                con.Open();
+                string query = "select j.id, j.nombre, sum(jp.score) as total_score from jugadores_partidas as jp " +
+                    "inner join jugadores as j on j.id = jp.jugador_id group by j.id, j.nombre order by total_score desc;";
+                var llamada = new NpgsqlCommand(query, con);
+                int puesto = 0;
+
+                using (var reader = llamada.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        puesto += 1;
+                        RankingOC.Add(new Ranking
+                        {
+                            Puesto = puesto,
+                            NombreJugador = reader.GetString(reader.GetOrdinal("nombre")),
+                            Puntuacion = reader.GetInt32(reader.GetOrdinal("total_score"))
+                        });
+                    }
+                }
+            }
         }
 
         private void DibujarGrafico()
@@ -172,11 +254,12 @@ namespace InterfazGraficaReto2
         {
             List<Partida> partidaEliminar = new List<Partida>();
 
+
             DateTime? fechaSeleccionada = FechaDP.SelectedDate;
 
             if (!fechaSeleccionada.HasValue) return;
 
-            await LlamadaApi();
+            await LlamadaPartidas();
 
             if (fechaSeleccionada.HasValue)         
             {
@@ -195,66 +278,6 @@ namespace InterfazGraficaReto2
             }
             
         }
-
-        private async Task LlamadaApi()     // función para hacer las llamadas a las apis
-        {
-            PartidaOC.Clear();          // limpieza de las tablas 
-            JugadorOC.Clear();
-            RankingOC.Clear();
-            try
-            {
-                var api = new Api();        // llamadas a las apis mediante su nombre
-                var respuestaPartidas = await api.apiGet("partidas");       
-                var respuestaJugadores = await api.apiGet("jugadores");
-                var respuestaRanking = await api.apiGet("ranking");
-
-                var listaPartidas = JsonConvert.DeserializeObject<JArray>(respuestaPartidas); // pasamos las respuestas de las apis a formato json
-                var listaJugadores = JsonConvert.DeserializeObject<JArray>(respuestaJugadores);
-                var listaRanking = JsonConvert.DeserializeObject<JArray>(respuestaRanking);
-
-                foreach (var item in listaPartidas)     // paso de variables de las apis a la lista
-                {
-                    string NombreJugador = item["nombre"].ToString();   
-                    string Fecha = item["fecha"].ToString();
-                    string Duracion = item["duracion"].ToString();
-                    string Puntuacion = item["score"].ToString();
-
-                    
-                    DateTime fecha = DateTime.Parse(Fecha);
-                    int duracion = int.Parse(Duracion);
-                    int puntuacion = int.Parse(Puntuacion);
-
-                    PartidaOC.Add(new Partida { NombreJugador = NombreJugador, Fecha = fecha, Duracion = duracion, Puntuacion = puntuacion });
-                }
-
-                foreach (var item in listaJugadores)
-                {
-                    int Id = int.Parse(item["id"].ToString());
-                    string Nombre = item["nombre"].ToString();
-                    string Email = item["email"].ToString();
-
-
-                    JugadorOC.Add(new Jugador { Id = Id, Nombre = Nombre, Email = Email });
-                }
-
-                foreach (var item in listaRanking)
-                {
-                    int Puesto = int.Parse(item["puesto"].ToString());
-                    string NombreJugador = item["nombre"].ToString();
-                    int Puntuacion = int.Parse(item["score"].ToString());
-
-
-                    RankingOC.Add(new Ranking { Puesto = Puesto, NombreJugador = NombreJugador, Puntuacion = Puntuacion });
-                }
-                DibujarGrafico();
-
-            }
-            catch (Exception e) // control de excepciones
-            {
-                MessageBox.Show("Excepcion: " + e.Message);
-            }
-        }
-
         private void AyudaPDF(object sender, RoutedEventArgs e)
         {
             string ruta = @"..\..\Documentación de usuario para GAME HUB.pdf";
