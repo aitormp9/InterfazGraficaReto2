@@ -7,15 +7,15 @@
         mc:Ignorable="d"
         Title="Informes" Height="252" Width="673">
     <Grid Margin="0,0,0,-6" Background="LightGray">
-        <Button Content="Exportar" HorizontalAlignment="Left" Margin="418,0,0,0" VerticalAlignment="Center" RenderTransformOrigin="-2.813,0.89" Background="White"/>
+        <Button Content="Exportar" HorizontalAlignment="Left" Margin="418,0,0,0" VerticalAlignment="Center" RenderTransformOrigin="-2.813,0.89" Background="White" Click="ExportarInforme"/>
         <Label Content="Elegir informe:" HorizontalAlignment="Left" Margin="139,93,0,0" VerticalAlignment="Top"/>
-        <ComboBox HorizontalAlignment="Left" Margin="243,95,0,0" VerticalAlignment="Top" Width="120">
+        <ComboBox x:Name="CBInforme" HorizontalAlignment="Left" Margin="243,95,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="Historial de partidas"/>
             <ComboBoxItem Content="Ranking de jugadores"/>
             <ComboBoxItem Content="Lista de jugadores"/>
         </ComboBox>
         <Label Content="Exportar en:" HorizontalAlignment="Left" Margin="139,125,0,0" VerticalAlignment="Top"/>
-        <ComboBox HorizontalAlignment="Left" Margin="243,125,0,0" VerticalAlignment="Top" Width="120">
+        <ComboBox x:Name="CBextension" HorizontalAlignment="Left" Margin="243,125,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="PDF" />
             <ComboBoxItem Content="Excel" />
             <ComboBoxItem Content="CSV" />

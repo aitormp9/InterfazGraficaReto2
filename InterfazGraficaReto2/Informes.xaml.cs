@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.ReportingServices.Interfaces;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace InterfazGraficaReto2
 {
@@ -23,6 +26,29 @@ namespace InterfazGraficaReto2
         public Informes()
         {
             InitializeComponent();
+        }
+
+        private void ExportarInforme(object sender, RoutedEventArgs e)  // función para exportar informe
+        {
+            // if para que salte un error si no se ha elegido nada del ComboBox antes de exportar
+            if (CBextension.SelectedItem == null || CBInforme.SelectedItem == null)     
+            {
+                MessageBox.Show("Selecciona un informe o tipo de extensión", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            else
+            {
+                string extension = ((ComboBoxItem)CBextension.SelectedItem).Content.ToString().ToLower();   
+                SaveFileDialog saveFileDialog = new SaveFileDialog();                                       // guardado del informe
+                saveFileDialog.Filter = $"{extension.ToUpper()} files|*.{extension}";
+                saveFileDialog.FileName = $"informe.{extension}";
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string contenido = "prueba";
+                    File.WriteAllText(saveFileDialog.FileName, contenido);
+                    MessageBox.Show("Informe guardado correctamente");
+                }
+            }
         }
     }
 }
