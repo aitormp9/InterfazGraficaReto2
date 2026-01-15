@@ -14,7 +14,7 @@
             <ColumnDefinition Width="153*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.ColumnSpan="2">
-            <scottplot:WpfPlot x:Name="Grafico" Margin="580,113,-5,0"/>
+            <scottplot:WpfPlot x:Name="Grafico" Margin="561,95,-5,0"/>
             <DataGrid Margin="0,95,225,0" IsReadOnly="True" AutoGenerateColumns="False" 
                        x:Name="Tabla">
                 <DataGrid.Columns>
@@ -48,7 +48,7 @@
             <Button Content="Ayuda" HorizontalAlignment="Left" Margin="705,57,0,0" VerticalAlignment="Top" Background="White" Width="54" Click="AyudaPDF"/>
             
             
-            <Label Content="Gráfico por Puntuaciones" HorizontalAlignment="Left" Margin="621,82,0,0" VerticalAlignment="Top"/>
+            <Label HorizontalAlignment="Left" Margin="621,82,0,0" VerticalAlignment="Top"/>
         </Grid>
     </Grid>
 </Window>

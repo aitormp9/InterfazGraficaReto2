@@ -37,10 +37,12 @@ namespace InterfazGraficaReto2
             }
             else
             {
+                string nombreInforme = ((ComboBoxItem)CBInforme.SelectedItem).Content.ToString().Replace(" ", "_");
+
                 string extension = ((ComboBoxItem)CBextension.SelectedItem).Content.ToString().ToLower();   
                 SaveFileDialog saveFileDialog = new SaveFileDialog();                                       // guardado del informe
                 saveFileDialog.Filter = $"{extension.ToUpper()} files|*.{extension}";
-                saveFileDialog.FileName = $"informe.{extension}";
+                saveFileDialog.FileName = $"{nombreInforme}.{extension}";
 
                 if (saveFileDialog.ShowDialog() == true)
                 {

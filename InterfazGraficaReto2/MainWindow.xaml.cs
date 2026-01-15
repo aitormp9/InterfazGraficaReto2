@@ -24,6 +24,8 @@ using Npgsql;
 using ScottPlot;
 using ScottPlot.Colormaps;
 using ScottPlot.TickGenerators;
+using ScottPlot.Statistics;
+using ScottPlot.AxisLimitManagers;
 
 namespace InterfazGraficaReto2
 {
@@ -68,7 +70,6 @@ namespace InterfazGraficaReto2
             RankingOC = new ObservableCollection<Ranking>();
 
             bd = new BaseDatos();
-
 
             InitializeComponent();
             // al iniciar el proyecto se abre la tabla de Partidas
@@ -160,36 +161,34 @@ namespace InterfazGraficaReto2
 
         private void DibujarGrafico()
         {
-            double[] duracion = PartidaOC.Select(d => (double)d.Duracion).ToArray();
-
-            if (duracion.Length == 0)
+            if (!PartidaOC.Any())
             {
                 Grafico.Plot.Clear();
                 Grafico.Refresh();
                 return;
             }
-            var hist = ScottPlot.Statistics.Histogram.WithBinCount(10, duracion);
-            double binSize = hist.FirstBinSize;
-            double halfBin = binSize / 2;
-            double[] yPuntuacion = new double[hist.Bins.Length];
-            for(int i= 0; i < hist.Bins.Length; i++)
-            {
-                double min = hist.Bins[i] - halfBin;
-                double max = hist.Bins[i] + halfBin;
-                var puntuaciones = PartidaOC.Where(d => d.Duracion >= min && d.Duracion <= max).Select(p=>p.Puntuacion);
-                yPuntuacion[i] = puntuaciones.Any() ? puntuaciones.Average() : 0; 
-            }
-            var barras = Grafico.Plot.Add.Bars(hist.Bins, yPuntuacion);
-            foreach(var bar in barras.Bars)
-            {
-                bar.Size = hist.FirstBinSize * 0.8;
-            }
-            Grafico.Plot.XLabel("duracion");
-            Grafico.Plot.YLabel("puntuacion");
+
+            double[] duraciones = PartidaOC.Select(d => (double)d.Duracion).ToArray();
+            double[] puntuaciones = PartidaOC.Select(d => (double)d.Puntuacion).ToArray();
+
+            Grafico.Plot.Clear();
+
+            var barras = Grafico.Plot.Add.Bars(duraciones, puntuaciones);
+
+            foreach (var bar in barras.Bars)
+                bar.Size = 5; 
+
+            Grafico.Plot.Title("Gráfico por puntuaciones");
+            Grafico.Plot.XLabel("Duración");
+            Grafico.Plot.YLabel("Puntuación");
+
+            double maxY = puntuaciones.Max();
+            Grafico.Plot.Axes.SetLimitsY(0, maxY * 1.05);
             Grafico.Plot.Axes.Margins(bottom: 0);
-            
+
             Grafico.Refresh();
         }
+
 
         private void VerInformes(object sender, RoutedEventArgs e)  // al hacer click en el botón de ver informes, se redirige a la ventana Informes
         {
