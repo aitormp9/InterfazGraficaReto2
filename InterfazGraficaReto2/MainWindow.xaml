@@ -8,21 +8,21 @@
         xmlns:scottplot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
         Title="GameHub" Height="450" Width="800" Background="LightGray">
     <Grid>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="153*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.ColumnSpan="2">
-            <scottplot:WpfPlot x:Name="Grafico" Margin="561,95,-5,0"/>
+            <scottplot:WpfPlot x:Name="Grafico" Margin="561,95,-5,0"/> <!-- declaración del gráfico-->
             <DataGrid Margin="0,95,225,0" IsReadOnly="True" AutoGenerateColumns="False" 
                        x:Name="Tabla">
+                <!-- DataGrid con las columnas de las 3 tablas, y luego dependiendo la tabla que se elija se muestran unas columnas u otras-->
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Nombre jugador" Width="*" Binding="{Binding NombreJugador}"/>
                     <DataGridTextColumn Header="Fecha" Width="*" Binding="{Binding Fecha, StringFormat={}{0:dd/MM/yyyy}}"/>
                     <DataGridTextColumn Header="Duración" Width="*" Binding="{Binding Duracion}"/>
                     <DataGridTextColumn Header="Puntuación" Width="*" Binding="{Binding Puntuacion}"/>
-                    
+
                     <DataGridTextColumn Header="Id" Width="*" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Nombre" Width="*" Binding="{Binding Nombre}"/>
                     <DataGridTextColumn Header="Email" Width="*" Binding="{Binding Email}"/>
@@ -31,9 +31,9 @@
                     <DataGridTextColumn Header="Nombre" Width="*" Binding="{Binding NombreJugador}"/>
                     <DataGridTextColumn Header="Puntuacion" Width="*" Binding="{Binding Puntuacion}"/>
                 </DataGrid.Columns>
-                
             </DataGrid>
-
+             
+            <!-- Combo Box para elegir la tabla-->
             <Label Content="Tabla: " HorizontalAlignment="Left" Margin="62,49,0,0" VerticalAlignment="Top"/>
             <ComboBox x:Name="TablasCB" HorizontalAlignment="Left" Margin="110,49,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="TablasCB_SelectionChanged">
                 <ComboBoxItem Content="Jugadores"/>
@@ -41,14 +41,13 @@
                 <ComboBoxItem Content="Ranking"/>
             </ComboBox>
 
+             <!-- Date Picker para elegir la fecha solamente en la tabla de Partidas-->
             <Label x:Name="LabelFecha"  Content="Filtrado por fecha:" HorizontalAlignment="Left" Margin="249,47,0,0" VerticalAlignment="Top"/>
             <DatePicker x:Name="FechaDP"  HorizontalAlignment="Left" Margin="360,47,0,0" VerticalAlignment="Top" SelectedDateChanged="FiltradoFecha"/>
-
-            <Button Content="Ver informes" HorizontalAlignment="Left" Margin="613,57,0,0" VerticalAlignment="Top" Background="White" Height="20" Width="77" Click="VerInformes"/>
+             <!-- Botones que abren otras ventanas-->
+            <Button Content="Informes" HorizontalAlignment="Left" Margin="613,57,0,0" VerticalAlignment="Top" Background="White" Height="20" Width="77" Click="VerInformes"/>
             <Button Content="Ayuda" HorizontalAlignment="Left" Margin="705,57,0,0" VerticalAlignment="Top" Background="White" Width="54" Click="AyudaPDF"/>
             
-            
-            <Label HorizontalAlignment="Left" Margin="621,82,0,0" VerticalAlignment="Top"/>
         </Grid>
     </Grid>
 </Window>

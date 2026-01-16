@@ -159,29 +159,30 @@ namespace InterfazGraficaReto2
             }
         }
 
-        private void DibujarGrafico()
+        private void DibujarGrafico()       // función para dibujar el gráfico
         {
-            if (!PartidaOC.Any())
+            if (!PartidaOC.Any())       // actualización del gráfico
             {
                 Grafico.Plot.Clear();
                 Grafico.Refresh();
                 return;
             }
-
+            // arrays de los datos de duraciones y puntuaciones
             double[] duraciones = PartidaOC.Select(d => (double)d.Duracion).ToArray();
             double[] puntuaciones = PartidaOC.Select(d => (double)d.Puntuacion).ToArray();
 
             Grafico.Plot.Clear();
 
-            var barras = Grafico.Plot.Add.Bars(duraciones, puntuaciones);
-
-            foreach (var bar in barras.Bars)
+            // configuración de las barras
+            var barras = Grafico.Plot.Add.Bars(duraciones, puntuaciones); 
+            foreach (var bar in barras.Bars)    
                 bar.Size = 5; 
 
             Grafico.Plot.Title("Gráfico por puntuaciones");
             Grafico.Plot.XLabel("Duración");
             Grafico.Plot.YLabel("Puntuación");
 
+            // configuración del gráfico
             double maxY = puntuaciones.Max();
             Grafico.Plot.Axes.SetLimitsY(0, maxY * 1.05);
             Grafico.Plot.Axes.Margins(bottom: 0);
