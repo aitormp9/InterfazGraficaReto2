@@ -6,23 +6,23 @@
         xmlns:local="clr-namespace:InterfazGraficaReto2"
         mc:Ignorable="d"
         Title="Informes" Height="225" Width="513">
-    <Grid Margin="0,0,0,-6" Background="LightGray">
+    <Grid Margin="0,0,0,-6" Background="#FF0C6ABE">
         <!-- Botón para exportar el informe seleccionado-->
-        <Button Content="Exportar" HorizontalAlignment="Left" Margin="371,112,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.813,0.89" Background="White" Click="ExportarInforme"/>
-        <Label Content="Elegir informe:" HorizontalAlignment="Left" Margin="92,0,0,0" VerticalAlignment="Center"/>
+        <Button Content="Exportar" HorizontalAlignment="Left" Margin="341,101,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.813,0.89" Background="White" Click="ExportarInforme" Height="37" Width="75"/>
+        <Label Content="Elegir informe:" HorizontalAlignment="Left" Margin="92,0,0,0" VerticalAlignment="Center" Foreground="White"/>
         <!-- ComboBox para elegir el informe a exxportar -->
         <ComboBox x:Name="CBInforme" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120">
             <ComboBoxItem Content="Historial de partidas"/>
             <ComboBoxItem Content="Ranking de jugadores"/>
             <ComboBoxItem Content="Lista de jugadores"/>
         </ComboBox>
-        <Label Content="Exportar en:" HorizontalAlignment="Left" Margin="92,127,0,0" VerticalAlignment="Top"/>
+        <Label Content="Exportar en:" HorizontalAlignment="Left" Margin="92,127,0,0" VerticalAlignment="Top" Foreground="White"/>
         <!-- Combo Box para elegir la extensión PDF, Excel o CSV -->
         <ComboBox x:Name="CBextension" HorizontalAlignment="Center" Margin="0,127,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="PDF" />
             <ComboBoxItem Content="XLSX" />
             <ComboBoxItem Content="CSV" />
         </ComboBox>
-        <Label Content="Exportación de Informes" HorizontalAlignment="Center" Margin="0,47,0,0" VerticalAlignment="Top" FontSize="25"/>
+        <Label Content="Exportación de Informes" HorizontalAlignment="Center" Margin="0,18,0,0" VerticalAlignment="Top" FontSize="25" Foreground="White"/>
     </Grid>
 </Window>

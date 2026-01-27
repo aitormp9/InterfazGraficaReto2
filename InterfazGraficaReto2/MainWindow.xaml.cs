@@ -26,6 +26,11 @@ using ScottPlot.Colormaps;
 using ScottPlot.TickGenerators;
 using ScottPlot.Statistics;
 using ScottPlot.AxisLimitManagers;
+using ScottPlot.Rendering.RenderActions;
+using ScottPlot;                 
+using System.Drawing;             
+using System.Linq;
+
 
 namespace InterfazGraficaReto2
 {
@@ -42,7 +47,7 @@ namespace InterfazGraficaReto2
     {
         public string NombreJugador { get; set; }
         public DateTime Fecha { get; set; }
-        public int Duracion { get; set; }
+        public TimeSpan Duracion { get; set; }
         public int Puntuacion { get; set; }
         public Partida() { }
     }
@@ -115,6 +120,7 @@ namespace InterfazGraficaReto2
                 con.Open();
                 string query = "select * from jugadores as j inner join jugadores_partidas as jp on j.id = jp.jugador_id " +    // consulta a ejecutar
                     "inner join partidas as p on jp.partida_id = p.id;";
+                
                 var llamada = new NpgsqlCommand(query, con);
 
                 using (var reader = llamada.ExecuteReader())
@@ -125,7 +131,7 @@ namespace InterfazGraficaReto2
                         {
                             NombreJugador = reader.GetString(reader.GetOrdinal("nombre")),
                             Fecha = reader.GetDateTime(reader.GetOrdinal("fecha")),
-                            Duracion = reader.GetInt32(reader.GetOrdinal("duracion")),
+                            Duracion = reader.GetTimeSpan(reader.GetOrdinal("duracion")),
                             Puntuacion = reader.GetInt32(reader.GetOrdinal("score"))
                         });
                     }
@@ -167,25 +173,36 @@ namespace InterfazGraficaReto2
                 Grafico.Refresh();
                 return;
             }
+
             // arrays de los datos de duraciones y puntuaciones
-            double[] duraciones = PartidaOC.Select(d => (double)d.Duracion).ToArray();
-            double[] puntuaciones = PartidaOC.Select(d => (double)d.Puntuacion).ToArray();
+            var datosUnicos = PartidaOC.GroupBy(p => p.Puntuacion).Select(g => g.First());
+            double[] duraciones = datosUnicos.Select(p => p.Duracion.TotalSeconds).ToArray();
+            double[] puntuaciones = datosUnicos.Select(p => (double)p.Puntuacion).ToArray();
 
             Grafico.Plot.Clear();
 
             // configuración de las barras
-            var barras = Grafico.Plot.Add.Bars(duraciones, puntuaciones); 
-            foreach (var bar in barras.Bars)    
-                bar.Size = 5; 
+            var barras = Grafico.Plot.Add.Bars(duraciones, puntuaciones);
+            foreach (var bar in barras.Bars)
+            {
+                bar.Size = 10;
+            }
 
+            // Configuración de textos
             Grafico.Plot.Title("Gráfico por puntuaciones");
             Grafico.Plot.XLabel("Duración");
             Grafico.Plot.YLabel("Puntuación");
+            Grafico.Plot.Axes.Title.Label.ForeColor = ScottPlot.Colors.White;
+            Grafico.Plot.Axes.Bottom.Label.ForeColor = ScottPlot.Colors.White;
+            Grafico.Plot.Axes.Left.Label.ForeColor = ScottPlot.Colors.White;
+            Grafico.Plot.Axes.Color(ScottPlot.Colors.White);
 
             // configuración del gráfico
-            double maxY = puntuaciones.Max();
-            Grafico.Plot.Axes.SetLimitsY(0, maxY * 1.05);
             Grafico.Plot.Axes.Margins(bottom: 0);
+            Grafico.Plot.Axes.SetLimitsY(0, 200);
+            Grafico.Plot.Axes.SetLimitsX(0, 300);
+            Grafico.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#0C6ABE");
+            Grafico.Plot.DataBackground.Color = ScottPlot.Colors.White;
 
             Grafico.Refresh();
         }

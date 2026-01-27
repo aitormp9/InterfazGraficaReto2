@@ -12,10 +12,10 @@
             <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="153*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.ColumnSpan="2">
+        <Grid Grid.ColumnSpan="2" Background="#FF0C6ABE">
             <scottplot:WpfPlot x:Name="Grafico" Margin="561,95,-5,0"/> <!-- declaración del gráfico-->
             <DataGrid Margin="0,95,225,0" IsReadOnly="True" AutoGenerateColumns="False" 
-                       x:Name="Tabla">
+                       x:Name="Tabla" Background="White">
                 <!-- DataGrid con las columnas de las 3 tablas, y luego dependiendo la tabla que se elija se muestran unas columnas u otras-->
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Nombre jugador" Width="*" Binding="{Binding NombreJugador}"/>
@@ -34,7 +34,7 @@
             </DataGrid>
              
             <!-- Combo Box para elegir la tabla-->
-            <Label Content="Tabla: " HorizontalAlignment="Left" Margin="62,49,0,0" VerticalAlignment="Top"/>
+            <Label Content="Tabla: " HorizontalAlignment="Left" Margin="62,49,0,0" VerticalAlignment="Top" Foreground="White"/>
             <ComboBox x:Name="TablasCB" HorizontalAlignment="Left" Margin="110,49,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="TablasCB_SelectionChanged">
                 <ComboBoxItem Content="Jugadores"/>
                 <ComboBoxItem Content="Partidas" />
@@ -42,7 +42,7 @@
             </ComboBox>
 
              <!-- Date Picker para elegir la fecha solamente en la tabla de Partidas-->
-            <Label x:Name="LabelFecha"  Content="Filtrado por fecha:" HorizontalAlignment="Left" Margin="249,47,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="LabelFecha"  Content="Filtrado por fecha:" HorizontalAlignment="Left" Margin="249,47,0,0" VerticalAlignment="Top" Foreground="White"/>
             <DatePicker x:Name="FechaDP"  HorizontalAlignment="Left" Margin="360,47,0,0" VerticalAlignment="Top" SelectedDateChanged="FiltradoFecha"/>
              <!-- Botones que abren otras ventanas-->
             <Button Content="Informes" HorizontalAlignment="Left" Margin="613,57,0,0" VerticalAlignment="Top" Background="White" Height="20" Width="77" Click="VerInformes"/>
