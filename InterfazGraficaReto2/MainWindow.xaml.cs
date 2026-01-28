@@ -223,7 +223,7 @@ namespace InterfazGraficaReto2
             ElegirTabla(resultadoCB);
         }
 
-        private void ElegirTabla(String resultadoCB)        // función para enseñar la tabla en función de lo elegido en el ComboBox
+        private async void ElegirTabla(string resultadoCB)        // función para enseñar la tabla en función de lo elegido en el ComboBox
         {
             foreach (var col in Tabla.Columns)      //  escondiendo todas las columnas de las tablas
             {
@@ -245,6 +245,8 @@ namespace InterfazGraficaReto2
                 case "Partidas":
                     FechaDP.Visibility = Visibility.Visible;
                     LabelFecha.Visibility = Visibility.Visible;
+                    FechaDP.SelectedDate = null;
+                    await LlamadaPartidas();
                     Tabla.ItemsSource = PartidaOC;
                     Tabla.Columns[0].Visibility = Visibility.Visible;
                     Tabla.Columns[1].Visibility = Visibility.Visible;
