@@ -92,7 +92,7 @@ namespace InterfazGraficaReto2
         public void LlamadaJugadores()      // función para la muestra de datos de la tabla Jugadores
         {
             JugadorOC.Clear();
-            using (NpgsqlConnection con = new NpgsqlConnection(bd.conexionBD()))
+            using (NpgsqlConnection con = new NpgsqlConnection(bd.conexionBD()))    // usando la conexión a la base de datos
             {
                 con.Open();
                 string query = "select * from jugadores";       // consulta a ejecutar
